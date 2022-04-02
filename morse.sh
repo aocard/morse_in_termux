@@ -22,6 +22,7 @@
 # The program includes an S.O.S. mode, which can be activated with
 # the argument "-sos". I recommend NOT DOING SO IN PUBLIC UNLESS UNDER
 # A REAL EMERGENCY.
+# The program also includes a repeat mode, activated by passing "-r" as the first argument and followed by the string to transmit, which repeats the message indefinitely. use with care.
 
 # Declaration of morse-coded letters and numbers
 declare -A code
@@ -106,13 +107,28 @@ if [[ $@ == "-sos" ]]; then
 	exit
 fi
 
-input=${@^^} # Converts arguments to uppercase and crams them into variable
+# Repeat mode. if enabled with -r, cuts the first argument (as it is the -r itself).
+if [[ $1 != "-r" ]]; then	
+	input=${@^^} # Converts arguments to uppercase and crams them into variable
+else
+	input=${@:2}
+	input=${input^^}
+fi
 
-for (( i=0; i<${#input}; i++ )); do # Iterates between chars in "input"
-	ch=${input:$i:1} # Gets current char
-	if [[ $ch > '@' && $ch < '[' ]] || [[ $ch > '/' && $ch < ':' ]]; then # If char is a letter or number
-		morse $ch # Flashes char on flashlight
-		sleep .5 # Waits for the duration of a "dash", as per international standard
+a=1
+while [[ $a -eq 1 ]]; do
+	for (( i=0; i<${#input}; i++ )); do # Iterates between chars in "input"
+		ch=${input:$i:1} # Gets current char
+		if [[ $ch > '@' && $ch < '[' ]] || [[ $ch > '/' && $ch < ':' ]]; then # If char is a letter or number
+			morse $ch # Flashes char on flashlight
+			sleep .5 # Waits for the duration of a "dash", as per international standard
+		fi
+		if [[ $ch == ' ' ]]; then echo; sleep 1.17; fi # For spaces, echoes a blank line (for debugging) and sleeps for 2.33 times the duration of a dash (or 7x the duration of a dot, as per international standard), rounding up.
+	done
+	if [[ $1 != "-r" ]]; then # Ends loop if not in repeat mode
+		a=0
+	else # If on repeat mode,
+		echo # Prints a newline for debugging and sleeeps for twice the amount it does in between words.
+		sleep 2.34
 	fi
-	if [[ $ch == ' ' ]]; then echo; sleep 1.17; fi # For spaces, echoes a blank line (for debugging) and sleeps for 2.33 times the duration of a dash (or 7x the duration of a dot, as per international standard), rounding up.
 done
