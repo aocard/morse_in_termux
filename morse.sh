@@ -76,7 +76,7 @@ dot(){
 # of a "dot"
 dash(){
 	termux-torch on
-	sleep 0.5
+	sleep 0.2
 	termux-torch off
 }
 
@@ -102,7 +102,7 @@ if [[ $@ == "-sos" ]]; then
 		morse S
 		morse O
 		morse S
-		sleep .5
+		sleep .3
 	done
 	exit
 fi
@@ -121,14 +121,14 @@ while [[ $a -eq 1 ]]; do
 		ch=${input:$i:1} # Gets current char
 		if [[ $ch > '@' && $ch < '[' ]] || [[ $ch > '/' && $ch < ':' ]]; then # If char is a letter or number
 			morse $ch # Flashes char on flashlight
-			sleep .5 # Waits for the duration of a "dash", as per international standard
+			sleep .3 # Waits for the duration of a "dash", as per international standard
 		fi
-		if [[ $ch == ' ' ]]; then echo; sleep 1.17; fi # For spaces, echoes a blank line (for debugging) and sleeps for 2.33 times the duration of a dash (or 7x the duration of a dot, as per international standard), rounding up.
+		if [[ $ch == ' ' ]]; then echo; sleep .7; fi # For spaces, echoes a blank line (for debugging) and sleeps for 2.33 times the duration of a dash (or 7x the duration of a dot, as per international standard), rounding up.
 	done
 	if [[ $1 != "-r" ]]; then # Ends loop if not in repeat mode
 		a=0
 	else # If on repeat mode,
 		echo # Prints a newline for debugging and sleeeps for twice the amount it does in between words.
-		sleep 2.34
+		sleep 1.4
 	fi
 done
